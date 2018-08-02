@@ -11,7 +11,10 @@
 <body>
 <h1>Welcome</h1>
 <p>
-  <button id="login">Click here to sign in.</button>
+  <button id="public">Fetch from public API.</button>
+</p>
+<p>
+    <button id="login">Fetch from protected API</button>
 </p>
 
 <script>
@@ -40,7 +43,14 @@
     function login() {
       window.location.assign(encodeURI(authorisationUrl));
     }
+
+    function fetchFromPublicAPI() {
+        // change API
+        window.location.assign(encodeURI("https://github.com:443"));
+    }
+
     document.getElementById('login').onclick = login;
+    document.getElementById('public').onclick = fetchFromPublicAPI;
   });
 </script>
 </body>
