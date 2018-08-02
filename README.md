@@ -18,7 +18,6 @@ To use this sample, you will need to:
   - set _Allowed Callback URLs_ to `custom-scheme://custom-domain/home.html`;
 7. set `auth0Domain` on `env-variables.json` to the _Domain_ defined in your Auth0 Application;
 8. set `clientId` on `env-variables.json` to the _Client Id_ defined in your Auth0 Application;
-9. set `clientSecret` on `env-variables.json` to the _Client Secret_ defined in your Auth0 Application;
 
 Then, to start the application, make sure you install all dependencies so you can run `start`:
 

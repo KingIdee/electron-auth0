@@ -1,0 +1,4 @@
+{
+  "apiIdentifier": "https://backend-api-url.com/",
+  "auth0Domain": "your-tenant-subdomain.auth0.com"
+}

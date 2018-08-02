@@ -19,7 +19,7 @@ function showWindow() {
     const url = request.url.replace(`${customScheme}://${customDomain}/`, '').substring(0, request.url.length - 1);
 
     if (url.indexOf('home.html') === 0) {
-      // needed, cause Auth0 includes '#access_token=eyJ0...' on the callback URL
+      // needed, cause Auth0 includes '#code=9Zg...' on the callback URL
       return callback(`${__dirname}/home.html`);
     }
 
@@ -35,9 +35,9 @@ function showWindow() {
   });
 
   ipcMain.on('loaded', () => {
-    const {audience, auth0Domain, clientId, clientSecret} = envVariables;
+    const {apiIdentifier, auth0Domain, clientId, clientSecret} = envVariables;
     win.webContents.send('globalProps', {
-      audience,
+      apiIdentifier,
       auth0Domain,
       clientId,
       clientSecret,
