@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require('express');
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -5,7 +6,9 @@ const envVariables = require('./env-variables');
 
 const app = express();
 
-app.get('/public', (req, res) => res.send('Public message'));
+app.use(cors());
+
+app.get('/public', (req, res) => res.send('Everyone in the world can read this message.'));
 
 app.use(jwt({
   // Dynamically provide a signing key based on the kid in the header and the singing keys provided by the JWKS endpoint.
@@ -22,6 +25,6 @@ app.use(jwt({
   algorithms: ['RS256']
 }));
 
-app.get('/private', (req, res) => res.send('Private message'));
+app.get('/private', (req, res) => res.send('Only authenticated users can read this message.'));
 
 app.listen(3000, () => console.log('Example app listening on port 3000!'));
