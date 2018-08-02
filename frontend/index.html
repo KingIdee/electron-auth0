@@ -21,7 +21,7 @@
   const { ipcRenderer } = require('electron');
   ipcRenderer.send('loaded');
   ipcRenderer.on('globalProps', (event, props) => {
-    const {audience, auth0Domain, clientId, clientSecret, customScheme, customDomain} = props;
+    const {apiIdentifier, auth0Domain, clientId, clientSecret, customScheme, customDomain} = props;
     // TODO generate better (random?) nonce and state properties
     const nonce = 'XHcLb-0hZg~V5u~lz-KKpr8rfqlQh9JZ';
     const redirectUri = `${customScheme}://${customDomain}/home.html`;
@@ -37,7 +37,7 @@
       '&response_type=' + responseType +
       '&redirect_uri=' + redirectUri +
       '&scope=' + scope +
-      '&audience=' + audience +
+      '&audience=' + apiIdentifier +
       '&state=' + state +
       '&nonce=' + nonce;
     function login() {
