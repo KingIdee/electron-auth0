@@ -1,0 +1,5 @@
+{
+  "audience": "https://electron-app-api.com/",
+  "auth0Domain": "bk-tmp.auth0.com",
+  "clientId": "SZn...IVm"
+}

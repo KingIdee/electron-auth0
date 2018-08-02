@@ -35,12 +35,11 @@ function showWindow() {
   });
 
   ipcMain.on('loaded', () => {
-    const {audience, auth0Domain, clientId, clientSecret} = envVariables;
+    const {audience, auth0Domain, clientId} = envVariables;
     win.webContents.send('globalProps', {
       audience,
       auth0Domain,
       clientId,
-      clientSecret,
       customScheme,
       customDomain,
     });
