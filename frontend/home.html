@@ -15,6 +15,7 @@
 <img style="max-width: 80px" id="picture" />
 <h3 id="name"></h3>
 <div id="success"></div>
+<button id="private">Get Private Message</button>
 <button id="logout">Logout</button>
 </body>
 
@@ -24,7 +25,7 @@
   ipcRenderer.send('loaded');
 
   ipcRenderer.on('globalProps', (event, props) => {
-    const {auth0Domain, clientId, customScheme, customDomain} = props;
+    const {auth0Domain, clientId, clientSecret, customScheme, customDomain} = props;
     const authorizationCodeType = 'authorization_code';
     const refreshTokenType = 'refresh_token';
     const redirectUri = `${customScheme}://${customDomain}/home.html`;
@@ -32,6 +33,7 @@
 
     const authConfig = {
       client_id: clientId,
+      client_secret: clientSecret,
       redirect_uri: redirectUri,
     };
 
@@ -62,6 +64,9 @@
       authConfig.grant_type = authorizationCodeType;
       authConfig.code = hashParams.code;
 
+      console.log(tokenUrl, authConfig);
+      debugger;
+
       axios.post(tokenUrl, authConfig).then((response) => {
         const { access_token, refresh_token, id_token } = response.data;
 
@@ -89,6 +94,20 @@
       localStorage.clear();
       window.location.assign(`${customScheme}://${customDomain}/index.html`);
     }
+
+    function fetchPrivate() {
+      const options = {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ' +  sessionStorage.getItem('access_token') },
+        url: 'http://localhost:3000/private',
+      };
+
+      axios(options).then((response) => {
+        alert(response.data);
+      }).catch(console.log);
+    }
+
+    document.getElementById('private').onclick = fetchPrivate;
   });
 </script>
 
