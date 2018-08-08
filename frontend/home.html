@@ -11,12 +11,12 @@
 </head>
 
 <body>
-<h2>Welcome Home</h2>
-<img style="max-width: 80px" id="picture" />
-<h3 id="name"></h3>
-<div id="success"></div>
-<button id="private">Get Private Message</button>
-<button id="logout">Logout</button>
+  <h2>Welcome Home</h2>
+  <img style="max-width: 80px" id="picture" />
+  <h3 id="name"></h3>
+  <div id="success"></div>
+  <button id="private">Get Private Message</button>
+  <button id="logout">Logout</button>
 </body>
 
 <script>
@@ -25,7 +25,9 @@
   ipcRenderer.send('loaded');
 
   ipcRenderer.on('globalProps', (event, props) => {
-    const {auth0Domain, clientId, clientSecret, customScheme, customDomain} = props;
+    console.log(props);
+    console.log(event);
+    const { auth0Domain, clientId, clientSecret, customScheme, customDomain } = props;
     const authorizationCodeType = 'authorization_code';
     const refreshTokenType = 'refresh_token';
     const redirectUri = `${customScheme}://${customDomain}/home.html`;
@@ -33,13 +35,14 @@
 
     const authConfig = {
       client_id: clientId,
-      client_secret: clientSecret,
       redirect_uri: redirectUri,
     };
 
     const refresh_token = localStorage.getItem('refresh_token');
-    if (refresh_token) authWithRefreshToken();
-    else authWithAuthorizationToken();
+    //if (refresh_token) authWithRefreshToken();
+    //else authWithAuthorizationToken();
+    //exchangeAuthCode();
+    authWithAuthorizationToken()
 
     function authWithRefreshToken() {
       authConfig.grant_type = refreshTokenType;
@@ -63,17 +66,33 @@
 
       authConfig.grant_type = authorizationCodeType;
       authConfig.code = hashParams.code;
+      authConfig.code_verifier = localStorage.getItem('verifier');
 
       console.log(tokenUrl, authConfig);
-      debugger;
+      //debugger;
+      var request = require("request");
 
-      axios.post(tokenUrl, authConfig).then((response) => {
-        const { access_token, refresh_token, id_token } = response.data;
+      var options = {
+        method: 'POST',
+        url: tokenUrl,
+        headers: { 'content-type': 'application/json' },
+        body: `{"grant_type":"authorization_code","client_id": ${authConfig.client_id},"code_verifier": ${authConfig.code_verifier},"code": ${authConfig.code },"redirect_uri": ${redirectUri}, }`
+      };
 
-        sessionStorage.setItem('access_token', access_token);
-        localStorage.setItem('refresh_token', refresh_token);
-        populateView(id_token);
-      }).catch(console.log);
+      request(options, function (error, response, body) {
+        if (error) throw new Error(error);
+
+        console.log(body);
+        console.log(response);
+      });
+
+      //axios.post(tokenUrl, authConfig).then((response) => {
+        //const { access_token, refresh_token, id_token } = response.data;
+        //console.log(response.data)
+        //sessionStorage.setItem('access_token', access_token);
+        //localStorage.setItem('refresh_token', refresh_token);
+        //populateView(id_token);
+      //}).catch(console.log);
     }
 
     function populateView(idToken, loadedWithRefresh) {
@@ -98,7 +117,7 @@
     function fetchPrivate() {
       const options = {
         method: 'GET',
-        headers: { 'Authorization': 'Bearer ' +  sessionStorage.getItem('access_token') },
+        headers: { 'authorization': 'Bearer ' + sessionStorage.getItem('access_token') },
         url: 'http://localhost:3000/private',
       };
 
